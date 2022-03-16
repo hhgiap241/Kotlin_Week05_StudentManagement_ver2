@@ -123,6 +123,13 @@ class ShowStudentListActivity : AppCompatActivity() {
         super.onResume()
         Log.i("continue", "view list continue")
         adapter!!.notifyDataSetChanged()
-        autoCompleteTV!!.setText("")
+        var beforeString: String = autoCompleteTV!!.text.toString()
+        if (beforeString.length != 0){
+            var lastCharacter: String = beforeString.last().toString()
+            var newString: String = beforeString.dropLast(1) + lastCharacter
+            autoCompleteTV!!.setText(newString)
+            autoCompleteTV!!.setSelection(newString.length)
+        }
+
     }
 }

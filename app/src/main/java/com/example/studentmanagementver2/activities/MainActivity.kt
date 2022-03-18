@@ -11,6 +11,7 @@ import com.example.studentmanagementver2.models.Student
 import com.example.studentmanagementver2.models.StudentList
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import java.io.FileNotFoundException
 import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
@@ -18,25 +19,30 @@ class MainActivity : AppCompatActivity() {
     private var titles: List<String> = emptyList()
     private var icons: List<Int> = emptyList()
 
-    fun createData(){
+    fun createData() {
         titles = listOf("Input student’s information", "Display list of students")
         icons = listOf(R.drawable.add_student, R.drawable.show_student_list)
     }
-    fun readJSONFile(){
-        try{
+
+    fun readJSONFile() {
+        try {
             var data: ArrayList<Student> = ArrayList()
             val inputStream: InputStream = openFileInput("studentList.json")
-            data = Json{ignoreUnknownKeys = true; explicitNulls=false}.decodeFromStream(inputStream)
+            data = Json { ignoreUnknownKeys = true; explicitNulls = false }.decodeFromStream(
+                inputStream
+            )
             // set data for student list
             StudentList.setListData(data)
-//            // set data for auto complete text view
-//            StudentList.setNameListData()
-        }catch (t: Throwable){
-            Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+//            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+        } catch (t: Throwable) {
+            t.printStackTrace()
+//            Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
         }
     }
 
-    var mainMenuListView: ListView?= null
+    var mainMenuListView: ListView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,11 +56,11 @@ class MainActivity : AppCompatActivity() {
         val adapter = MainAdapter(this, titles, icons)
         mainMenuListView!!.adapter = adapter
         mainMenuListView!!.setOnItemClickListener { adapterView, view, i, l ->
-            if (i === 0){
+            if (i === 0) {
                 val intent = Intent(this, AddStudentActivity::class.java)
                 startActivity(intent)
             }
-            if (i === 1){
+            if (i === 1) {
                 val intent = Intent(this, ShowStudentListActivity::class.java)
                 startActivity(intent)
             }

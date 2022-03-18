@@ -13,7 +13,8 @@ object StudentList {
             studentNameList.add(StudentList.studentList[i].name)
         }
     }
-//    fun setNameListData(){
+
+    //    fun setNameListData(){
 //        for (i in studentList.indices){
 //            studentNameList.add(studentList[i].name)
 //        }
@@ -30,8 +31,6 @@ object StudentList {
         studentList.add(student)
         studentNameList.add(student.name)
     }
-
-
 
     fun deleteStudent(student: Student) {
         for (i in studentList.indices) {

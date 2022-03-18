@@ -15,17 +15,17 @@ import java.io.OutputStreamWriter
 
 class AddStudentActivity : AppCompatActivity() {
 
-    private var studentClassSpinner: Spinner?= null
-    private var studentNameET: EditText?= null
-    private var studentBirthday: EditText?=null
-    private var studentGenderRadioBtn: RadioButton?= null
-    private var studentGenderRadioGroup: RadioGroup?= null
-    private var saveStudentBtn: Button?= null
+    private var studentClassSpinner: Spinner? = null
+    private var studentNameET: EditText? = null
+    private var studentBirthday: EditText? = null
+    private var studentGenderRadioBtn: RadioButton? = null
+    private var studentGenderRadioGroup: RadioGroup? = null
+    private var saveStudentBtn: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_student)
-        var studentClassroom: String ?= null
+        var studentClassroom: String? = null
 
         studentNameET = findViewById(R.id.inputNameET)
         studentBirthday = findViewById(R.id.inputDateET)
@@ -38,7 +38,7 @@ class AddStudentActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, classroomList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         studentClassSpinner!!.adapter = adapter
-        studentClassSpinner!!.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
+        studentClassSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 studentClassroom = classroomList[p2]
             }
@@ -62,10 +62,12 @@ class AddStudentActivity : AppCompatActivity() {
             var radioID: Int = studentGenderRadioGroup!!.checkedRadioButtonId
             studentGenderRadioBtn = findViewById(radioID)
             // create student object
-            var student =  Student(studentNameET!!.text.toString(),
-                                    studentBirthday!!.text.toString(),
-                                    studentClassroom.toString(),
-                                    studentGenderRadioBtn!!.text.toString())
+            var student = Student(
+                studentNameET!!.text.toString(),
+                studentBirthday!!.text.toString(),
+                studentClassroom.toString(),
+                studentGenderRadioBtn!!.text.toString()
+            )
             // add student to list
             StudentList.addStudent(student)
             Toast.makeText(this, "Saved successfully!", Toast.LENGTH_SHORT).show()
@@ -73,6 +75,7 @@ class AddStudentActivity : AppCompatActivity() {
             this.clearInput()
         }
     }
+
     fun saveToFile() {
         try {
             val fileName = "studentList.json"
@@ -86,7 +89,8 @@ class AddStudentActivity : AppCompatActivity() {
             Log.e("error", t.message.toString())
         }
     }
-    fun clearInput(){
+
+    fun clearInput() {
         studentNameET!!.setText("")
         studentBirthday!!.setText("")
         studentGenderRadioGroup!!.check(R.id.maleRB)

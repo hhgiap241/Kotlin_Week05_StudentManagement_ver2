@@ -12,7 +12,7 @@ class MainAdapter(
     private val context: Activity,
     private val titles: List<String>,
     private val icons: List<Int>
-): ArrayAdapter<String>(context, R.layout.menu_list_item, titles) {
+) : ArrayAdapter<String>(context, R.layout.menu_list_item, titles) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater = context.layoutInflater
         val rowView: View = inflater.inflate(R.layout.menu_list_item, null, false)

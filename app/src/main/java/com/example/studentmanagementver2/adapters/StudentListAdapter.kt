@@ -14,8 +14,11 @@ import com.example.studentmanagementver2.models.StudentList
 import studentmanagementver2.R
 
 
-class StudentListAdapter(private val studentList: ArrayList<Student>, private val isLinearLayoutManager: Boolean) :
-    RecyclerView.Adapter<StudentListAdapter.ViewHolder>(){
+class StudentListAdapter(
+    private val studentList: ArrayList<Student>,
+    private val isLinearLayoutManager: Boolean
+) :
+    RecyclerView.Adapter<StudentListAdapter.ViewHolder>() {
     var onItemClick: ((Student) -> Unit)? = null
 
     inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
@@ -34,10 +37,10 @@ class StudentListAdapter(private val studentList: ArrayList<Student>, private va
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
-        var studentView: View?= null
-        if (isLinearLayoutManager){ // linear layout
+        var studentView: View? = null
+        if (isLinearLayoutManager) { // linear layout
             studentView = inflater.inflate(R.layout.student_list_item, parent, false)
-        }else{ // grid layout
+        } else { // grid layout
             studentView = inflater.inflate(R.layout.student_list_item_2, parent, false)
         }
         return ViewHolder(studentView)
@@ -58,5 +61,4 @@ class StudentListAdapter(private val studentList: ArrayList<Student>, private va
     override fun getItemCount(): Int {
         return studentList.size
     }
-
 }

@@ -3,15 +3,12 @@ package com.example.studentmanagementver2.activities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
-import studentmanagementver2.R
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.studentmanagementver2.adapters.StudentListAdapter
 import com.example.studentmanagementver2.models.Student
 import com.example.studentmanagementver2.models.StudentList
+import studentmanagementver2.R
 
 class ShowStudentListActivity : AppCompatActivity() {
 
@@ -41,7 +39,7 @@ class ShowStudentListActivity : AppCompatActivity() {
 
         isLinearLayoutManager = this.loadState()
         // set up adapter
-        setUpAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
+        setUpRecyclerAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
         if (isLinearLayoutManager as Boolean)
             studentRecyclerView!!.layoutManager = LinearLayoutManager(this)
         else
@@ -67,21 +65,41 @@ class ShowStudentListActivity : AppCompatActivity() {
         changeLayoutBtn!!.setOnClickListener {
             if (isLinearLayoutManager as Boolean) {
                 isLinearLayoutManager = false
-                setUpAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
+                setUpRecyclerAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
                 studentRecyclerView!!.layoutManager = GridLayoutManager(this, 2)
 
             } else {
                 isLinearLayoutManager = true
-                setUpAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
+                setUpRecyclerAdapter(StudentList.getStudentList(), isLinearLayoutManager!!)
                 studentRecyclerView!!.layoutManager = LinearLayoutManager(this)
             }
         }
 
         // auto complete text view handling
+        setUpAutoCompleteTVAdapter(StudentList.getStudentNameList())
+    }
+
+    fun setUpRecyclerAdapter(data: ArrayList<Student>, isLinearLayoutManager: Boolean) {
+        adapter = StudentListAdapter(data, isLinearLayoutManager!!)
+        studentRecyclerView!!.adapter = adapter
+        adapter!!.onItemClick = { student ->
+            val intent = Intent(
+                this@ShowStudentListActivity,
+                EditStudentInformationActivity::class.java
+            )
+            intent.putExtra("name", student.name)
+            intent.putExtra("classroom", student.classroom)
+            intent.putExtra("gender", student.gender)
+            intent.putExtra("birthday", student.birthday)
+            startActivity(intent)
+        }
+    }
+
+    fun setUpAutoCompleteTVAdapter(data: ArrayList<String>) {
         autoCompleteTVAdapter = ArrayAdapter<String>(
             this,
             android.R.layout.simple_list_item_1,
-            StudentList.getStudentNameList()
+            data
         )
         autoCompleteTV!!.setAdapter(autoCompleteTVAdapter)
         autoCompleteTV!!.addTextChangedListener(object : TextWatcher {
@@ -100,26 +118,9 @@ class ShowStudentListActivity : AppCompatActivity() {
                                 true
                             )
                         } as ArrayList<Student>
-                setUpAdapter(foundStudents, isLinearLayoutManager!!)
+                setUpRecyclerAdapter(foundStudents, isLinearLayoutManager!!)
             }
         })
-
-    }
-
-    fun setUpAdapter(data: ArrayList<Student>, isLinearLayoutManager: Boolean) {
-        adapter = StudentListAdapter(data, isLinearLayoutManager!!)
-        studentRecyclerView!!.adapter = adapter
-        adapter!!.onItemClick = { student ->
-            val intent = Intent(
-                this@ShowStudentListActivity,
-                EditStudentInformationActivity::class.java
-            )
-            intent.putExtra("name", student.name)
-            intent.putExtra("classroom", student.classroom)
-            intent.putExtra("gender", student.gender)
-            intent.putExtra("birthday", student.birthday)
-            startActivity(intent)
-        }
     }
 
     fun saveState() {
@@ -141,14 +142,11 @@ class ShowStudentListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("continue", "view list continue")
-        adapter!!.notifyDataSetChanged()
-        var beforeString: String = autoCompleteTV!!.text.toString()
-        if (beforeString.length != 0) {
-            var lastCharacter: String = beforeString.last().toString()
-            var newString: String = beforeString.dropLast(1) + lastCharacter
-            autoCompleteTV!!.setText(newString)
-            autoCompleteTV!!.setSelection(newString.length)
-        }
+        val text: Editable = autoCompleteTV!!.text
+        autoCompleteTV!!.setText(text)
+        autoCompleteTV!!.setSelection(text.length)
 
+        adapter!!.notifyDataSetChanged()
+        setUpAutoCompleteTVAdapter(StudentList.getStudentNameList())
     }
 }

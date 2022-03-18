@@ -14,20 +14,20 @@ import studentmanagementver2.R
 import java.io.OutputStreamWriter
 
 class EditStudentInformationActivity : AppCompatActivity() {
-    private var editStudentNameET: EditText?= null
-    private var editStudentBrithdayET: EditText?= null
-    private var editStudentClassSpinner: Spinner?=null
-    private var radioGroup: RadioGroup?= null
-    private var radioButton:RadioButton?= null
-    private var saveBtn: Button?= null
-    private var deleteBtn: Button?= null
+    private var editStudentNameET: EditText? = null
+    private var editStudentBrithdayET: EditText? = null
+    private var editStudentClassSpinner: Spinner? = null
+    private var radioGroup: RadioGroup? = null
+    private var radioButton: RadioButton? = null
+    private var saveBtn: Button? = null
+    private var deleteBtn: Button? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_student_information)
 
-        var classroom: String ?= null
+        var classroom: String? = null
         editStudentNameET = findViewById(R.id.editNameET)
         editStudentBrithdayET = findViewById(R.id.editDateET)
         editStudentClassSpinner = findViewById(R.id.editClassSpinner)
@@ -41,15 +41,16 @@ class EditStudentInformationActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, classroomList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         editStudentClassSpinner!!.adapter = adapter
-        editStudentClassSpinner!!.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                classroom = classroomList[p2]
-            }
+        editStudentClassSpinner!!.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    classroom = classroomList[p2]
+                }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
             }
-        }
 
         val intent = intent
         var oldStudent = Student(
@@ -58,7 +59,12 @@ class EditStudentInformationActivity : AppCompatActivity() {
             intent.getStringExtra("classroom").toString(),
             intent.getStringExtra("gender").toString()
         )
-        this.setStudentInformation(oldStudent.name, oldStudent.birthday, oldStudent.classroom, oldStudent.gender )
+        this.setStudentInformation(
+            oldStudent.name,
+            oldStudent.birthday,
+            oldStudent.classroom,
+            oldStudent.gender
+        )
 
         saveBtn!!.setOnClickListener {
             // check empty name
@@ -76,10 +82,12 @@ class EditStudentInformationActivity : AppCompatActivity() {
             var radioID: Int = radioGroup!!.checkedRadioButtonId
             radioButton = findViewById(radioID)
 
-            var newStudent =  Student(editStudentNameET!!.text.toString(),
-                                    editStudentBrithdayET!!.text.toString(),
-                                    classroom.toString(),
-                                    radioButton!!.text.toString())
+            var newStudent = Student(
+                editStudentNameET!!.text.toString(),
+                editStudentBrithdayET!!.text.toString(),
+                classroom.toString(),
+                radioButton!!.text.toString()
+            )
             StudentList.editStudentInfo(oldStudent, newStudent)
             Toast.makeText(this, "Update successfully!", Toast.LENGTH_SHORT).show()
             finish()
@@ -90,7 +98,8 @@ class EditStudentInformationActivity : AppCompatActivity() {
             finish()
         }
     }
-    fun setStudentInformation(name: String, birthday: String, classroom: String, gender:String){
+
+    fun setStudentInformation(name: String, birthday: String, classroom: String, gender: String) {
         editStudentNameET!!.setText(name)
         editStudentBrithdayET!!.setText(birthday)
         var pos: Int = classroom.last().digitToInt() - 1
@@ -102,6 +111,7 @@ class EditStudentInformationActivity : AppCompatActivity() {
         else
             radioGroup!!.check(R.id.otherGenderRB_2)
     }
+
     fun saveToFile() {
         try {
             val fileName = "studentList.json"
@@ -115,6 +125,7 @@ class EditStudentInformationActivity : AppCompatActivity() {
             Log.e("error", t.message.toString())
         }
     }
+
     override fun onPause() {
         super.onPause()
         Log.i("ok", "Saved")
